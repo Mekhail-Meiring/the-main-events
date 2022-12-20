@@ -1,11 +1,13 @@
 HELP.md
 .gradle
 build/
-client-service/build
-web-service/build
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+client-service/build
+web-service/build
+common/build
 
 ### STS ###
 .apt_generated

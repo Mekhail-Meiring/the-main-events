@@ -5,6 +5,6 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name = "theMainEvents"
+rootProject.name = "the-main-events"
 
-include("web-service", "client-service")
+include("web-service", "client-service", "common")
