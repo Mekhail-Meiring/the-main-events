@@ -1,24 +1,21 @@
 package za.co.themainevents.service
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
-import org.springframework.context.annotation.ComponentScan
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.stereotype.Service
+import za.co.themainevents.datasource.Datasource
+import za.co.themainevents.datasource.dto.ListOfClients
+import za.co.themainevents.datasource.dto.ListOfEvents
+import za.co.themainevents.models.Client
+import za.co.themainevents.models.Event
 
+@Service
+class WebService (@Qualifier("network") private val datasource: Datasource) {
+    fun getFriends(clientID: Int): ListOfClients = datasource.getFriends(clientID)
+    fun getOtherClientsEvents(): ListOfEvents = datasource.getAllEvents()
+    fun getClientEvents(clientID: Int): ListOfEvents = datasource.getClientEvents(clientID)
+    fun createEvent(event: Event) = datasource.createNewEvent(event)
+    fun registerClient(client: Client) = datasource.registerUser(client)
+    fun clientLogin(client: Client) = datasource.clientLogin(client)
+    fun getAllClients(): ListOfClients = datasource.getClients()
 
-/**
- * The main class for the web service application.
- * This class is annotated with SpringBootApplication and ComponentScan to enable
- * Spring Boot and scan for components in the specified package.
- */
-@SpringBootApplication
-@ComponentScan(basePackages = ["za.co.themainevents.controller"])
-class WebService
-
-
-/**
- * The main entry point for the web service application.
- * @param args command line arguments passed to the application.
- */
-fun main (args: Array<String>){
-    runApplication<WebService>(*args)
 }
