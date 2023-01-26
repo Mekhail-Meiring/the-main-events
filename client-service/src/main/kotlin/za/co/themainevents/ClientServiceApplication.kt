@@ -10,8 +10,8 @@ import org.springframework.context.annotation.ComponentScan
  * Spring Boot and scan for components in the specified package.
  */
 @SpringBootApplication
-@ComponentScan(basePackages = ["za.co.themainevents.controller"])
-class ClientService
+//@ComponentScan(basePackages = ["za.co.themainevents.controller"])
+class ClientServiceApplication
 
 
 /**
@@ -19,5 +19,5 @@ class ClientService
  * @param args command line arguments passed to the application.
  */
 fun main (args: Array<String>) {
-    runApplication<ClientService>(*args)
+    runApplication<ClientServiceApplication>(*args)
 }
