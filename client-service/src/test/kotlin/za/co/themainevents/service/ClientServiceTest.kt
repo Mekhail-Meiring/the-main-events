@@ -1,4 +1,4 @@
-package za.co.themainevents
+package za.co.themainevents.service
 
 import io.mockk.mockk
 import io.mockk.verify
@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import za.co.themainevents.datasource.Datasource
 import za.co.themainevents.models.Client
 import za.co.themainevents.models.Event
-import za.co.themainevents.service.ClientService
 
 
 internal class ClientServiceTest{
