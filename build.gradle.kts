@@ -1,14 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-
-plugins {
-	id("org.springframework.boot") version "3.0.1-SNAPSHOT"
-	id("io.spring.dependency-management") version "1.1.0"
-	kotlin("jvm") version "1.7.21"
-	kotlin("plugin.spring") version "1.7.21"
-}
-
-
 subprojects {
 	apply(plugin = "org.springframework.boot")
 	apply(plugin = "io.spring.dependency-management")
@@ -47,8 +38,20 @@ allprojects{
 		implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 		implementation("com.squareup.retrofit2:retrofit:2.9.0")
 		implementation("com.squareup.retrofit2:converter-gson:2.1.0")
+		implementation("com.zaxxer:HikariCP:3.4.5")
+		implementation("org.postgresql:postgresql:42.3.1")
+		implementation("org.jetbrains.exposed:exposed-core:0.40.1")
+		implementation("org.jetbrains.exposed:exposed-dao:0.40.1")
+		implementation("org.jetbrains.exposed:exposed-jdbc:0.40.1")
 		testImplementation("org.springframework.boot:spring-boot-starter-test")
+		testImplementation("io.mockk:mockk:1.10.4")
 
 	}
+}
 
+plugins {
+	id("org.springframework.boot") version "3.0.1-SNAPSHOT"
+	id("io.spring.dependency-management") version "1.1.0"
+	kotlin("jvm") version "1.7.21"
+	kotlin("plugin.spring") version "1.7.21"
 }
