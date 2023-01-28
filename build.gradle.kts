@@ -18,7 +18,6 @@ subprojects {
 	}
 }
 
-
 allprojects{
 	group = "za.co.themainevents"
 	version = "0.0.1-SNAPSHOT"
@@ -31,21 +30,22 @@ allprojects{
 	}
 
 	dependencies {
+
+		// Kotlin:
 		implementation(kotlin("stdlib-jdk8"))
-		implementation("org.springframework.boot:spring-boot-starter-web")
-		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 		implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-		implementation("com.squareup.retrofit2:retrofit:2.9.0")
-		implementation("com.squareup.retrofit2:converter-gson:2.1.0")
-		implementation("com.zaxxer:HikariCP:3.4.5")
-		implementation("org.postgresql:postgresql:42.3.1")
-		implementation("org.jetbrains.exposed:exposed-core:0.40.1")
-		implementation("org.jetbrains.exposed:exposed-dao:0.40.1")
-		implementation("org.jetbrains.exposed:exposed-jdbc:0.40.1")
+		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+		// Spring:
+		implementation("org.springframework.boot:spring-boot-starter-web")
 		testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+		// Mockk:
 		testImplementation("io.mockk:mockk:1.10.4")
 
+		// Will take advantage of Kotlin's syntax to give us some assertion
+		testImplementation("io.kotest:kotest-assertions-core-jvm:4.3.1")
 	}
 }
 
