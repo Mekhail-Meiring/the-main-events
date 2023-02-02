@@ -11,6 +11,7 @@ import za.co.themainevents.datasource.dto.FriendsClientIDsDO
 import za.co.themainevents.exceptions.*
 import za.co.themainevents.models.Client
 import za.co.themainevents.models.Event
+import za.co.themainevents.models.FriendClientsIDs
 
 
 /**
@@ -213,13 +214,38 @@ class ClientDataSource : Datasource{
     }
 
 
-    override fun addFriend(clientID: Int, friendID: Int) {
+    /**
+     * Add a new friend to the client's friend list.
+     *
+     * @param clientID The ID of the client who is adding a friend.
+     * @param friendID The ID of the friend being added.
+     * @return A FriendClientsIDs object representing the newly added friend relationship.
+     * @throws ClientNotFoundException if either the client ID or friend ID does not exist in the client table.
+     */
+    override fun addFriend(clientID: Int, friendID: Int): FriendClientsIDs {
+
+        var friendClientsIDs = FriendClientsIDs(clientID, friendID)
+
         transaction {
-            FriendsClientIDsDO.insert {
-                it[clientId] = clientID
-                it[friendId] = friendID
+
+            val clientIdExists = ClientDO.select(ClientDO.clientId eq clientID).count() > 0
+            val friendIdExists = ClientDO.select(ClientDO.clientId eq friendID).count() > 0
+
+            if (clientIdExists && friendIdExists){
+                friendClientsIDs = FriendsClientIDsDO.insert {
+                    it[clientId] = clientID
+                    it[friendId] = friendID
+                }.let {
+                    FriendClientsIDs(it[FriendsClientIDsDO.clientId], it[FriendsClientIDsDO.friendId])
+                }
+            }
+            else {
+                throw ClientNotFoundException("Both client ID and friend ID must exist in the client table")
             }
         }
+
+        return friendClientsIDs
+
     }
 
 
