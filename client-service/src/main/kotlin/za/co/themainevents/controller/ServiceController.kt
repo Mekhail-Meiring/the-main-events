@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import za.co.themainevents.models.Client
 import za.co.themainevents.models.Event
+import za.co.themainevents.models.FriendClientsIDs
 import za.co.themainevents.service.ClientService
 
 @RestController
@@ -24,6 +25,12 @@ class ServiceController (private val clientService: ClientService){
 
     @PostMapping("login")
     fun clientLogin() : String = "Welcome"
+
+
+    @PostMapping("add-friend")
+    fun addFriend() : FriendClientsIDs {
+        return FriendClientsIDs(1,1)
+    }
 
 
     @GetMapping("friends/{clientID}")
