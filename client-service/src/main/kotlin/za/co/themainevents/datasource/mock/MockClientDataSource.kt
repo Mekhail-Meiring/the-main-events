@@ -1,14 +1,11 @@
 package za.co.themainevents.datasource.mock
 
-import org.springframework.stereotype.Repository
 import za.co.themainevents.datasource.Datasource
 import za.co.themainevents.exceptions.*
 import za.co.themainevents.models.Client
 import za.co.themainevents.models.Event
 import za.co.themainevents.models.FriendClientsIDs
 
-
-@Repository
 class MockClientDataSource : Datasource{
 
     private val listOfClients = arrayListOf(
@@ -154,7 +151,7 @@ class MockClientDataSource : Datasource{
         }
     }
 
-    override fun addFriend(clientID: Int, friendID: Int) {
+    override fun addFriend(clientID: Int, friendID: Int): FriendClientsIDs {
         TODO("Not yet implemented")
     }
 
