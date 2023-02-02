@@ -14,15 +14,9 @@ class ClientService (@Qualifier("clientDatasource") private val dataSource: Data
 
     fun getAllEvents() : List<Event> = dataSource.getAllEvents()
 
-    fun registerClient(client: Client) = dataSource.registerClient(client)
-
-    fun createNewEvent(event: Event) : Event = dataSource.createNewEvent(event)
-
-    fun clientLogin(email: String, password: String) : Client = dataSource.clientLogin(email, password)
+    fun getEventsForClient(clientId: Int) : List<Event> = dataSource.getClientEvents(clientId)
 
     fun getClientFriends(clientId: Int) : List<Client> = dataSource.getFriends(clientId)
-
-    fun getEventsForClient(clientId: Int) : List<Event> = dataSource.getClientEvents(clientId)
 
     fun updateEvent(newEvent: Event, clientId: Int) : Event = dataSource.updateEvent(newEvent, clientId)
 
@@ -31,5 +25,13 @@ class ClientService (@Qualifier("clientDatasource") private val dataSource: Data
     fun removeEvent(eventID: Int, clientId: Int) = dataSource.removeEvent(eventID, clientId)
 
     fun removeClient(clientID: Int)  = dataSource.removeClient(clientID)
+
+    fun addFriend(clientId: Int, friendId: Int) = dataSource.addFriend(clientId, friendId)
+
+    fun registerClient(client: Client) = dataSource.registerClient(client)
+
+    fun createNewEvent(event: Event) : Event = dataSource.createNewEvent(event)
+
+    fun clientLogin(email: String, password: String) : Client = dataSource.clientLogin(email, password)
 
 }
