@@ -2,6 +2,7 @@ package za.co.themainevents.datasource
 
 import za.co.themainevents.models.Client
 import za.co.themainevents.models.Event
+import za.co.themainevents.models.FriendClientsIDs
 
 
 /**
@@ -86,5 +87,5 @@ interface Datasource {
      */
     fun removeClient(clientId: Int)
 
-    fun addFriend(clientID: Int, friendID: Int)
+    fun addFriend(clientID: Int, friendID: Int) : FriendClientsIDs
 }
