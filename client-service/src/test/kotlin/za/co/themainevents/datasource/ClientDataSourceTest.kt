@@ -1,13 +1,13 @@
 package za.co.themainevents.datasource
 
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.springframework.test.web.servlet.MockMvc
 import org.testcontainers.containers.JdbcDatabaseContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
@@ -22,7 +22,8 @@ import org.testcontainers.utility.DockerImageName
 @Testcontainers
 internal class ClientDataSourceTest(
     @Autowired val clientDataSource: ClientDataSource,
-    @Autowired val jbdc : JdbcTemplate
+    @Autowired val jbdc : JdbcTemplate,
+    @Autowired val mockMvc: MockMvc
 ) {
 
     @AfterEach
@@ -59,7 +60,6 @@ internal class ClientDataSourceTest(
         assertEquals("client-service-test-db", postgreSQLContainer.databaseName)
 
     }
-
 
 }
 

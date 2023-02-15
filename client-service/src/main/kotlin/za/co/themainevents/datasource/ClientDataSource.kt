@@ -1,17 +1,16 @@
 package za.co.themainevents.datasource
 
 import com.zaxxer.hikari.HikariDataSource
+import jakarta.annotation.PostConstruct
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.stereotype.Repository
-import za.co.themainevents.datasource.dto.ClientDO
-import za.co.themainevents.datasource.dto.EventDO
-import za.co.themainevents.datasource.dto.FriendsClientIDsDO
+import za.co.themainevents.datasource.dto.*
 import za.co.themainevents.exceptions.*
-import za.co.themainevents.models.Client
-import za.co.themainevents.models.Event
-import za.co.themainevents.models.FriendClientsIDs
+import za.co.themainevents.models.*
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.env.Environment
 
 
 /**
@@ -22,15 +21,20 @@ import za.co.themainevents.models.FriendClientsIDs
 @Repository("clientDatasource")
 class ClientDataSource : Datasource{
 
+    @Autowired
+    lateinit var env: Environment
+
+
     /**
      * Initializes the datasource by connecting to the postgresql database using HikariDataSource
      * and adding a shutdown hook to close the connection pool on shutdown
      */
-    init {
+    @PostConstruct
+    fun initialize() {
         val dataSource = HikariDataSource().apply {
-            jdbcUrl = "jdbc:postgresql://localhost:5432/the_main_events"
-            username = "postgres"
-            password = "postgres"
+            jdbcUrl = env.getRequiredProperty("spring.datasource.url")
+            username = env.getRequiredProperty("spring.datasource.username")
+            password = env.getRequiredProperty("spring.datasource.password")
         }
 
         // Close connection pool on shutdown
