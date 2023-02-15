@@ -137,7 +137,6 @@ class MockClientDataSource : Datasource{
     }
 
 
-
     override fun removeEvent(eventId: Int, clientID: Int) {
         if (!listOfEvents.removeIf { it.eventId == eventId}) {
             throw EventNotFoundException("Unable to remove the event, because it does not exist")
@@ -152,7 +151,22 @@ class MockClientDataSource : Datasource{
     }
 
     override fun addFriend(clientID: Int, friendID: Int): FriendClientsIDs {
-        TODO("Not yet implemented")
+
+        if (!listOfClients.any { it.clientId == clientID }) {
+            throw ClientNotFoundException("Client not found in database.")
+        }
+
+        if (!listOfClients.any { it.clientId == friendID }) {
+            throw ClientNotFoundException("Friend not found in database.")
+        }
+
+        listOfFriendClientsIDS.firstOrNull() { it.clientId == clientID && it.friendId == friendID }
+            ?.let { throw FriendAlreadyExistsException("Friend already exists") }
+
+        val newFriend = FriendClientsIDs(clientID, friendID)
+
+        listOfFriendClientsIDS.add(newFriend)
+        return newFriend
     }
 
 

@@ -2,7 +2,13 @@ package za.co.themainevents.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -24,111 +30,126 @@ internal class ServiceControllerTest @Autowired constructor(
 ){
 
 
+    @Nested
+    @DisplayName("A client can register, login, create events and add friends")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+    inner class BasicFunctionality {
 
-    @Test
-    fun `should return all clients` () {
-        // when/then
-        mockMvc.get("/clients")
-            .andDo { print() }
-            .andExpect {
-                status { isOk() }
-                content { contentType(MediaType.APPLICATION_JSON) }
-                jsonPath("$[0].first_name") {value("John")}
+        // Given:
+        private val newClientName = "newJohn"
+        private val newClientSurname = "Doe"
+        private val newClientEmail = "newexample@email"
+        private val newClientPassword = "password"
+        private val newClientID = 0
+
+
+        @Order(1)
+        @Test
+        fun `first time client should be able to register` () {
+
+            // Given
+            val client = Client(newClientID, newClientName, newClientSurname, newClientEmail, newClientPassword)
+
+            // When
+            val performPost = mockMvc.post("/register"){
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(client)
             }
-    }
 
-    @Test
-    fun `should be able to register a new client to database` () {
-        // Given
-        val client = Client(0, "newJohn", "Doe", "newexample@email", "password")
-
-        // When
-        val performPost = mockMvc.post("/register"){
-            contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(client)
+            // Then
+            performPost
+                .andDo { print() }
+                .andExpect {
+                    status { isCreated() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    jsonPath("$.first_name") {value("newJohn")}
+                }
         }
 
-        // Then
-        performPost
-            .andDo { print() }
-            .andExpect {
-                status { isCreated() }
-                content { contentType(MediaType.APPLICATION_JSON) }
-                jsonPath("$.first_name") {value("newJohn")}
-            }
-    }
-    
-    
-    @Test
-    fun `should be able to create a new event` () {
-        // Given
-        val event = Event(0, 1, "newLocation", "newData", "newTime", "")
-        
-        // When
-        val performPost = mockMvc.post("/event"){
-            contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(event)
-        }
-        
-        // Then
-        performPost
-            .andDo { print() }
-            .andExpect {
-                status { isCreated() }
-                content { contentType(MediaType.APPLICATION_JSON) }
-                jsonPath("$.location") {value("newLocation")}
-            }
-
-    }
-
-
-    @Test
-    fun `should be able to login and get client matching information` () {
-        // Given
-        val email = "example@email"
-        val password = "password"
-
-        // When
-        val performPost = mockMvc.post("/login"){
-            contentType = MediaType.APPLICATION_JSON
-            param("email", email)
-            param("password", password)
+        @Order(2)
+        @Test
+        fun `registered client should be added to the database` () {
+            // when/then
+            mockMvc.get("/clients")
+                .andDo { print() }
+                .andExpect {
+                    status { isOk() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    jsonPath("$[3].first_name") {value(newClientName) }
+                }
         }
 
-        // Then
-        performPost
-            .andDo { print() }
-            .andExpect {
-                status { isOk() }
-                content { contentType(MediaType.APPLICATION_JSON) }
-                jsonPath("$.first_name") {value("John")}
+
+        @Order(3)
+        @Test
+        fun `registered client should be able to login` () {
+
+            // When
+            val performPost = mockMvc.post("/login"){
+                contentType = MediaType.APPLICATION_JSON
+                param("email", newClientEmail)
+                param("password", newClientPassword)
             }
 
-    }
-
-
-    @Test
-    fun `should be able to add friends` () {
-        // Given
-        val clientID = 1
-        val friendID = 2
-
-        // When
-        val performPost = mockMvc.post("/add-friend"){
-            contentType = MediaType.APPLICATION_JSON
-            param("clientID", clientID.toString())
-            param("friendID", friendID.toString())
+            // Then
+            performPost
+                .andDo { print() }
+                .andExpect {
+                    status { isOk() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    jsonPath("$.first_name") {value(newClientName)}
+                }
         }
 
-        // Then
-        performPost
-            .andDo { print() }
-            .andExpect {
-                status { isOk() }
-                content { contentType(MediaType.APPLICATION_JSON) }
-                jsonPath("$[0].client_id") {value("John")}
+        @Order(4)
+        @Test
+        fun `should be able to create a new event` () {
+
+            // Given
+            val event = Event(0, newClientID, "newLocation", "newData", "newTime", "")
+
+            // When
+            val performPost = mockMvc.post("/event"){
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(event)
             }
 
+            // Then
+            performPost
+                .andDo { print() }
+                .andExpect {
+                    status { isCreated() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    jsonPath("$.location") {value("newLocation")}
+                }
+
+        }
+
+
+        @Order(5)
+        @Test
+        fun `should be able to add friends` () {
+            // Given
+            val friendID = 1
+
+            // When
+            val performPost = mockMvc.post("/add-friend"){
+                contentType = MediaType.APPLICATION_JSON
+                param("clientID", newClientID.toString())
+                param("friendID", friendID.toString())
+            }
+
+            // Then
+            performPost
+                .andDo { print() }
+                .andExpect {
+                    status { isOk() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    jsonPath("$.client_id") {value(newClientID)}
+                }
+
+        }
     }
 
 }
